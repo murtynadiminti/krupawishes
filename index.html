@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HAPPY BIRTHDAY KRUPA</title>
+
+<style>
+body {
+    background: #0b0f1a;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding-top: 40px;
+    cursor: pointer;
+}
+
+h1 {
+    color: #facc15;
+}
+
+/* Speaker Image */
+.speakerImage {
+    width: 220px;
+    margin: 30px auto;
+    display: block;
+    border-radius: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Speaking animation */
+.speaking {
+    animation: pulseGlow 1s infinite;
+}
+
+@keyframes pulseGlow {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 15px #00eaff;
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 35px #00eaff;
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 15px #00eaff;
+    }
+}
+</style>
+</head>
+
+<body onclick="startOnce()">
+
+<h1>🎂 HAPPY BIRTHDAY KRUPA 🎉</h1>
+<p>👉 Click anywhere to start AI Birthday Wishes</p>
+
+<!-- YOUR IMAGE -->
+<img src="robot.jfif" id="speaker" class="speakerImage" alt="Birthday Speaker">
+
+<script>
+let started = false;
+let voices = [];
+
+const announcements = [
+  "Hi Krupa. Happy Birthday to you. I wish you many more happy returns of this wonderful day. You are a very good human being, kind hearted, caring, emotional, sincere, and dedicated in nature. Be always the same, and may God bless you with a hundred years of long life. Once again, I wish you a very happy birthday and many more happy returns of the day."
+];
+
+// Load voices safely
+speechSynthesis.onvoiceschanged = () => {
+    voices = speechSynthesis.getVoices();
+};
+
+function startOnce() {
+    if (started) return;
+    started = true;
+    speakAll();
+}
+
+function speak(text) {
+    return new Promise(resolve => {
+        const u = new SpeechSynthesisUtterance(text);
+
+        const indianFemaleVoice =
+            voices.find(v => v.lang === "en-IN") ||
+            voices.find(v => v.name.toLowerCase().includes("female")) ||
+            voices[0];
+
+        u.voice = indianFemaleVoice;
+        u.rate = 0.95;
+        u.pitch = 1.1;
+
+        const img = document.getElementById("speaker");
+
+        u.onstart = () => img.classList.add("speaking");
+        u.onend = () => {
+            img.classList.remove("speaking");
+            resolve();
+        };
+
+        speechSynthesis.speak(u);
+    });
+}
+
+async function speakAll() {
+    for (let line of announcements) {
+        await speak(line);
+    }
+}
+</script>
+
+</body>
+</html>
